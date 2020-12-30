@@ -18,6 +18,20 @@
     "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es",
     "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielstgt/svg-vue3.git"
+  },
+  "keywords": [
+    "laravel mix",
+    "svg-vue",
+    "component"
+  ],
+  "author": "Daniel Hartmann",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danielstgt/laravel-mix-svg-vue/issues"
+  },
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.12.0",
