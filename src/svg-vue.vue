@@ -10,7 +10,7 @@
 <script>
 import { computed } from 'vue';
 
-export default /*#__PURE__*/defineComponent({
+export default {
     name: 'SvgVue',
 
     props: {
@@ -30,5 +30,5 @@ export default /*#__PURE__*/defineComponent({
             return this.$props.icon.replace(new RegExp('.'.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'), '/') + '.svg';
         },
     },
-});
+}
 </script>

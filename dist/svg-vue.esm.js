@@ -1,6 +1,6 @@
 import { computed, openBlock, createBlock } from 'vue';
 
-var script = /*#__PURE__*/defineComponent({
+var script = {
   name: 'SvgVue',
   props: {
     icon: String
@@ -20,13 +20,13 @@ var script = /*#__PURE__*/defineComponent({
     }
 
   }
-});
+};
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createBlock("svg", {
-    viewBox: _ctx.svgViewBoxValues,
+    viewBox: $data.svgViewBoxValues,
     xmlns: "http://www.w3.org/2000/svg",
-    innerHTML: _ctx.svgContent
+    innerHTML: $data.svgContent
   }, null, 8, ["viewBox", "innerHTML"]);
 }
 

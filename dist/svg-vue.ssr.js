@@ -52,7 +52,7 @@ function _arrayLikeToArray(arr, len) {
 
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}var script = /*#__PURE__*/defineComponent({
+}var script = {
   name: 'SvgVue',
   props: {
     icon: String
@@ -75,11 +75,11 @@ function _nonIterableRest() {
       return this.$props.icon.replace(new RegExp('.'.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'), '/') + '.svg';
     }
   }
-});function render(_ctx, _cache, $props, $setup, $data, $options) {
+};function render(_ctx, _cache, $props, $setup, $data, $options) {
   return vue.openBlock(), vue.createBlock("svg", {
-    viewBox: _ctx.svgViewBoxValues,
+    viewBox: $data.svgViewBoxValues,
     xmlns: "http://www.w3.org/2000/svg",
-    innerHTML: _ctx.svgContent
+    innerHTML: $data.svgContent
   }, null, 8, ["viewBox", "innerHTML"]);
 }script.render = render;// Import vue component
 // IIFE injects install function into component, allowing component
