@@ -17,18 +17,14 @@ export default {
         icon: String
     },
 
-    data() {
-        return {
-            svgString: require(`svg-files-path/${this.getIconPath()}`).default,
-            svgViewBoxValues: computed(() => this.svgString ? (/viewBox="([^"]+)"/.exec(this.svgString) || '')[1] : null),
-            svgContent: computed(() => this.svgString ? this.svgString.replace(/^<svg[^>]*>|<\/svg>$/g, '') : null),
-        }
-    },
+    setup(props) {
+        const getIconPath = () => props.icon.replace(new RegExp('.'.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'), '/') + '.svg';
 
-    methods: {
-        getIconPath() {
-            return this.$props.icon.replace(new RegExp('.'.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'), '/') + '.svg';
-        },
+        const svgString = require(`svg-files-path/${getIconPath()}`).default;
+        const svgViewBoxValues = computed(() => svgString ? (/viewBox="([^"]+)"/.exec(svgString) || '')[1] : null);
+        const svgContent = computed(() => svgString ? svgString.replace(/^<svg[^>]*>|<\/svg>$/g, '') : null);
+
+        return { svgViewBoxValues, svgContent };
     },
 }
 </script>
