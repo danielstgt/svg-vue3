@@ -6,27 +6,26 @@ var script = {
     icon: String
   },
 
-  data() {
+  setup(props) {
+    const getIconPath = () => props.icon.replace(new RegExp('.'.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'), '/') + '.svg';
+
+    const svgString = require(`svg-files-path/${getIconPath()}`).default;
+
+    const svgViewBoxValues = computed(() => svgString ? (/viewBox="([^"]+)"/.exec(svgString) || '')[1] : null);
+    const svgContent = computed(() => svgString ? svgString.replace(/^<svg[^>]*>|<\/svg>$/g, '') : null);
     return {
-      svgString: require(`svg-files-path/${this.getIconPath()}`).default,
-      svgViewBoxValues: computed(() => this.svgString ? (/viewBox="([^"]+)"/.exec(this.svgString) || '')[1] : null),
-      svgContent: computed(() => this.svgString ? this.svgString.replace(/^<svg[^>]*>|<\/svg>$/g, '') : null)
+      svgViewBoxValues,
+      svgContent
     };
-  },
-
-  methods: {
-    getIconPath() {
-      return this.$props.icon.replace(new RegExp('.'.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'), '/') + '.svg';
-    }
-
   }
+
 };
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createBlock("svg", {
-    viewBox: $data.svgViewBoxValues,
+    viewBox: $setup.svgViewBoxValues,
     xmlns: "http://www.w3.org/2000/svg",
-    innerHTML: $data.svgContent
+    innerHTML: $setup.svgContent
   }, null, 8, ["viewBox", "innerHTML"]);
 }
 

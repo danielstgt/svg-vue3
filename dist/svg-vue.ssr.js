@@ -57,29 +57,29 @@ function _nonIterableRest() {
   props: {
     icon: String
   },
-  data: function data() {
-    var _this = this;
-
-    return {
-      svgString: require("svg-files-path/".concat(this.getIconPath())).default,
-      svgViewBoxValues: vue.computed(function () {
-        return _this.svgString ? (/viewBox="([^"]+)"/.exec(_this.svgString) || '')[1] : null;
-      }),
-      svgContent: vue.computed(function () {
-        return _this.svgString ? _this.svgString.replace(/^<svg[^>]*>|<\/svg>$/g, '') : null;
-      })
+  setup: function setup(props) {
+    var getIconPath = function getIconPath() {
+      return props.icon.replace(new RegExp('.'.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'), '/') + '.svg';
     };
-  },
-  methods: {
-    getIconPath: function getIconPath() {
-      return this.$props.icon.replace(new RegExp('.'.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'), '/') + '.svg';
-    }
+
+    var svgString = require("svg-files-path/".concat(getIconPath())).default;
+
+    var svgViewBoxValues = vue.computed(function () {
+      return svgString ? (/viewBox="([^"]+)"/.exec(svgString) || '')[1] : null;
+    });
+    var svgContent = vue.computed(function () {
+      return svgString ? svgString.replace(/^<svg[^>]*>|<\/svg>$/g, '') : null;
+    });
+    return {
+      svgViewBoxValues: svgViewBoxValues,
+      svgContent: svgContent
+    };
   }
 };function render(_ctx, _cache, $props, $setup, $data, $options) {
   return vue.openBlock(), vue.createBlock("svg", {
-    viewBox: $data.svgViewBoxValues,
+    viewBox: $setup.svgViewBoxValues,
     xmlns: "http://www.w3.org/2000/svg",
-    innerHTML: $data.svgContent
+    innerHTML: $setup.svgContent
   }, null, 8, ["viewBox", "innerHTML"]);
 }script.render = render;// Import vue component
 // IIFE injects install function into component, allowing component
