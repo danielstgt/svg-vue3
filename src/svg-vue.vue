@@ -18,11 +18,10 @@ export default {
     },
 
     setup(props) {
-        const getIconPath = () => props.icon.replace(new RegExp('.'.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'), '/') + '.svg';
-
-        const svgString = require(`svg-files-path/${getIconPath()}`).default;
-        const svgViewBoxValues = computed(() => svgString ? (/viewBox="([^"]+)"/.exec(svgString) || '')[1] : null);
-        const svgContent = computed(() => svgString ? svgString.replace(/^<svg[^>]*>|<\/svg>$/g, '') : null);
+        const iconPath = computed(() => props.icon.replace(new RegExp('.'.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'), '/') + '.svg');
+        const svgString = computed(() => require(`svg-files-path/${iconPath.value}`).default);
+        const svgViewBoxValues = computed(() => svgString ? (/viewBox="([^"]+)"/.exec(svgString.value) || '')[1] : null);
+        const svgContent = computed(() => svgString ? svgString.value.replace(/^<svg[^>]*>|<\/svg>$/g, '') : null);
 
         return { svgViewBoxValues, svgContent };
     },
