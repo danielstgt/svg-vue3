@@ -58,17 +58,17 @@ function _nonIterableRest() {
     icon: String
   },
   setup: function setup(props) {
-    var getIconPath = function getIconPath() {
+    var iconPath = vue.computed(function () {
       return props.icon.replace(new RegExp('.'.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'), '/') + '.svg';
-    };
-
-    var svgString = require("svg-files-path/".concat(getIconPath())).default;
-
+    });
+    var svgString = vue.computed(function () {
+      return require("svg-files-path/".concat(iconPath.value)).default;
+    });
     var svgViewBoxValues = vue.computed(function () {
-      return svgString ? (/viewBox="([^"]+)"/.exec(svgString) || '')[1] : null;
+      return svgString ? (/viewBox="([^"]+)"/.exec(svgString.value) || '')[1] : null;
     });
     var svgContent = vue.computed(function () {
-      return svgString ? svgString.replace(/^<svg[^>]*>|<\/svg>$/g, '') : null;
+      return svgString ? svgString.value.replace(/^<svg[^>]*>|<\/svg>$/g, '') : null;
     });
     return {
       svgViewBoxValues: svgViewBoxValues,
