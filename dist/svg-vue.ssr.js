@@ -64,23 +64,29 @@ function _nonIterableRest() {
     var svgString = vue.computed(function () {
       return require("svg-files-path/".concat(iconPath.value)).default;
     });
-    var svgViewBoxValues = vue.computed(function () {
-      return svgString ? (/viewBox="([^"]+)"/.exec(svgString.value) || '')[1] : null;
+    var svgAttributes = vue.computed(function () {
+      if (!svgString) return {};
+      var wrapper = document.createElement('div');
+      wrapper.innerHTML = svgString.value;
+      var attributesList = wrapper.firstElementChild.attributes;
+      var attributes = {};
+      Object.keys(attributesList).map(function (i) {
+        return attributes[attributesList[i].name] = attributesList[i].value;
+      });
+      return attributes;
     });
     var svgContent = vue.computed(function () {
       return svgString ? svgString.value.replace(/^<svg[^>]*>|<\/svg>$/g, '') : null;
     });
     return {
-      svgViewBoxValues: svgViewBoxValues,
+      svgAttributes: svgAttributes,
       svgContent: svgContent
     };
   }
 };function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue.openBlock(), vue.createBlock("svg", {
-    viewBox: $setup.svgViewBoxValues,
-    xmlns: "http://www.w3.org/2000/svg",
+  return vue.openBlock(), vue.createBlock("svg", vue.mergeProps($setup.svgAttributes, {
     innerHTML: $setup.svgContent
-  }, null, 8, ["viewBox", "innerHTML"]);
+  }), null, 16, ["innerHTML"]);
 }script.render = render;// Import vue component
 // IIFE injects install function into component, allowing component
 // to be registered via Vue.use() as well as Vue.component(),

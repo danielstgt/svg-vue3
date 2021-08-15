@@ -1,4 +1,4 @@
-import { computed, openBlock, createBlock } from 'vue';
+import { computed, openBlock, createBlock, mergeProps } from 'vue';
 
 var script = {
   name: 'SvgVue',
@@ -9,10 +9,18 @@ var script = {
   setup(props) {
     const iconPath = computed(() => props.icon.replace(new RegExp('.'.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'), '/') + '.svg');
     const svgString = computed(() => require(`svg-files-path/${iconPath.value}`).default);
-    const svgViewBoxValues = computed(() => svgString ? (/viewBox="([^"]+)"/.exec(svgString.value) || '')[1] : null);
+    const svgAttributes = computed(() => {
+      if (!svgString) return {};
+      let wrapper = document.createElement('div');
+      wrapper.innerHTML = svgString.value;
+      let attributesList = wrapper.firstElementChild.attributes;
+      let attributes = {};
+      Object.keys(attributesList).map(i => attributes[attributesList[i].name] = attributesList[i].value);
+      return attributes;
+    });
     const svgContent = computed(() => svgString ? svgString.value.replace(/^<svg[^>]*>|<\/svg>$/g, '') : null);
     return {
-      svgViewBoxValues,
+      svgAttributes,
       svgContent
     };
   }
@@ -20,11 +28,9 @@ var script = {
 };
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return openBlock(), createBlock("svg", {
-    viewBox: $setup.svgViewBoxValues,
-    xmlns: "http://www.w3.org/2000/svg",
+  return openBlock(), createBlock("svg", mergeProps($setup.svgAttributes, {
     innerHTML: $setup.svgContent
-  }, null, 8, ["viewBox", "innerHTML"]);
+  }), null, 16, ["innerHTML"]);
 }
 
 script.render = render;
