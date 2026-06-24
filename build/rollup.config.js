@@ -7,8 +7,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import babel from '@rollup/plugin-babel';
-import PostCSS from 'rollup-plugin-postcss';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import minimist from 'minimist';
 
 // Get browserslist config and remove ie from es build targets
@@ -42,17 +41,10 @@ const baseConfig = {
     },
     vue: {
     },
-    postVue: [
-      // Process only `<style module>` blocks.
-      PostCSS({
-        modules: {
-          generateScopedName: '[local]___[hash:base64:5]',
-        },
-        include: /&module=.*\.css$/,
-      }),
-      // Process all `<style>` blocks except `<style module>`.
-      PostCSS({ include: /(?<!&module=.*)\.css$/ }),
-    ],
+    // The component ships no `<style>` blocks, so no CSS plugin is needed in the
+    // post-Vue stage. (Re-add a CSS plugin like rollup-plugin-postcss here if a
+    // `<style>` block is ever introduced.)
+    postVue: [],
     babel: {
       exclude: 'node_modules/**',
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.vue'],
