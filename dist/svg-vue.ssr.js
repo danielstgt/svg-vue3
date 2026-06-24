@@ -69,13 +69,20 @@ function _unsupportedIterableToArray(r, a) {
     });
     var svgAttributes = vue.computed(function () {
       if (!svgString.value) return {};
-      var wrapper = document.createElement('div');
-      wrapper.innerHTML = svgString.value;
-      var attributesList = wrapper.firstElementChild.attributes;
+
+      // Parse the attributes of the opening `<svg ...>` tag straight from the
+      // string instead of round-tripping through `document.createElement`, so
+      // this also works during SSR where there is no `document` (see
+      // danielstgt/svg-vue3#2). Server and client see the same string, so the
+      // rendered markup is identical and hydration stays mismatch-free.
+      var openTag = svgString.value.match(/<svg\b([\s\S]*?)>/i);
+      if (!openTag) return {};
       var attributes = {};
-      Object.keys(attributesList).map(function (i) {
-        return attributes[attributesList[i].name] = attributesList[i].value;
-      });
+      var attrRegex = /([:\w-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'))?/g;
+      var match;
+      while ((match = attrRegex.exec(openTag[1])) !== null) {
+        attributes[match[1]] = match[2] !== undefined ? match[2] : match[3] !== undefined ? match[3] : '';
+      }
       return attributes;
     });
     var svgContent = vue.computed(function () {
